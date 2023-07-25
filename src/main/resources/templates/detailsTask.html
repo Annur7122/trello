@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="main_layout.html">
+<div layout:fragment="siteContent">
+   <div  class="card border-secondary mb-3" style="max-width: 90%;">
+      <div class="card-body text-dark">
+         <h5 class="card-title" th:text="${task.getTasksTitle()}"></h5>
+         <h5 class="card-title" th:text="${task.getTasksDescription()}"></h5>
+
+         <div style="display: flex;">
+
+
+
+
+
+
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#changeStatus">
+               Change status of Task
+            </button>
+
+            <div>
+               <br>
+               <!-- Modal -->
+               <div class="modal fade" id="changeStatus" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Folder</h1>
+                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form th:action="@{'/change-status'}" method="post">
+                           <div class="modal-body">
+                              <div class = "row">
+                                 <div class="col-12">
+                                    <label>Task Status: </label>
+                                 </div>
+                              </div>
+                              <div class = "row mt-2">
+                                 <div class="col-12">
+                                           <input type="hidden" name="task_id" th:value="${task.getId()}">
+                                           <select class="form-select" name="status_number">
+                                              <option value="0">TO DO</option>
+                                              <option value="2">IN TEST</option>
+                                              <option value="3">DONE</option>
+                                              <option value="4">FAILED</option>
+                                          </select>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button  class="btn btn-success">Change Status</button>
+                           </div>
+                        </form>
+                     </div>
+                     </div>
+                  </div>
+            </div>
+         </div>
+
+      </div>
+   </div>
+
+
+
+   <div th:if="${task.getTasksStatus() != 4 && task.getTasksStatus() != 3}">
+      <h2>Write your comments:</h2>
+      <form th:action="@{'/add-comment'}" method="post">
+         <div class="row">
+            <div class="col-12">
+               <textarea class="form-control" name="commentsName"></textarea>
+            </div>
+         </div>
+         <input type="hidden" name="task.id" th:value="${task.getId()}">
+         <div class="row mt-3">
+            <div class="col-12">
+               <button class="btn btn-success btn-sm">ADD COMMENT</button>
+            </div>
+         </div>
+      </form>
+   </div>
+
+
+   <div class="row">
+      <div class="col-12">
+         <div class="list-group" th:if="comments != null"  th:each="comment : ${comments}">
+            <a href="JavaScript:void(0)" class="list-group-item list-group-item-action">
+               <div class="d-flex w-100 justify-content-between">
+                  <h5 class="mb-1">Anonymous user</h5>
+<!--                  <small class="text-body-secondary"></small>-->
+               </div>
+               <p class="mb-1" th:text="${comment.getCommentsName()}"></p>
+            </a>
+
+         </div>
+   </div>
+</div>
+
+</div>
+
+
+
+</html>

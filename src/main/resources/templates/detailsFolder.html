@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th = "http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="main_layout.html">
+<div layout:fragment="siteContent">
+   <div  class="card border-secondary mb-3" style="max-width: 90%;">
+      <div class="card-body text-dark">
+         <h5 class="card-title" th:text="${folder.getFoldersName()}"></h5>
+
+         <div style="display: flex;">
+            <form th:action="@{/remove-category}" method="post">
+               <input type="hidden" name="folder_id" th:value="${folder.getId()}">
+               <button type="submit" th:name="category_id" th:value="${category.getCategoryId()}" th:each="category : ${categories}" class="btn btn-primary" th:text="'- ' + ${category.getCategoryName()}"></button>
+            </form>
+
+
+
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addCategory">
+               +Add Category
+            </button>
+
+            <div>
+               <br>
+               <!-- Modal -->
+               <div class="modal fade" id="addCategory" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                     <div class="modal-content">
+                        <div class="modal-header">
+                           <h1 class="modal-title fs-5" id="exampleModalLabel">Add New Folder</h1>
+                           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <form th:action="@{'/add-category'}" method="post">
+                           <div class="modal-body">
+                              <div class = "row">
+                                 <div class="col-12">
+                                    <label>Category Name: </label>
+                                 </div>
+                              </div>
+                              <div class = "row mt-2">
+                                 <div class="col-12">
+                                           <input type="hidden" name="folder_id" th:value="${folder.getId()}">
+                                           <select class="form-select" name="category_id">
+                                             <option th:each="category1 : ${allCategories}" th:value="${category1.getCategoryId()}"
+                                                     th:text="${category1.getCategoryName()}">
+                                             </option>
+                                          </select>
+                                 </div>
+                              </div>
+                           </div>
+                           <div class="modal-footer">
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              <button  class="btn btn-success">Add Folder</button>
+                           </div>
+                        </form>
+                     </div>
+                     </div>
+                  </div>
+            </div>
+         </div>
+
+      </div>
+   </div>
+
+
+   <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addTask">
+      +New Task
+   </button>
+   <br>
+   <!-- Modal -->
+   <div class="modal fade" id="addTask" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+         <div class="modal-content">
+            <div class="modal-header">
+               <h1 class="modal-title fs-5" >Add New Task</h1>
+               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form th:action="@{'/addTask'}" method="post">
+
+               <div class="modal-body">
+                  <div class = "row">
+                     <div class="col-12">
+                        <label>Task Title: </label>
+                     </div>
+                  </div>
+
+                  <div class = "row mt-2">
+                     <div class="col-12">
+                        <input  type="text" class="form-control" name="tasksTitle" placeholder="Task Title" required>
+                     </div>
+                  </div>
+
+                  <div class = "row">
+                     <div class="col-12">
+                        <label>Task Description: </label>
+                     </div>
+                  </div>
+                  <div class = "row mt-2">
+                     <div class="col-12">
+                        <textarea  type="text" class="form-control" name="tasksDescription" placeholder="Task Description" required></textarea>
+                     </div>
+                  </div>
+                  <input type="hidden" th:value="0" name="tasksStatus">
+                  <input type="hidden" th:value="${folder.getId()}" name="folder.id">
+               </div>
+               <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="submit" class="btn btn-success">Add Task</button>
+               </div>
+            </form>
+
+         </div>
+      </div>
+   </div>
+
+   <table class="table">
+      <thead>
+      <tr>
+         <th>ID</th>
+         <th>Task Name</th>
+         <th>Status</th>
+         <th style="width:10%;">DETAILS</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each = "task : ${tasks}" >
+         <td th:text="${task.getId()}"></td>
+         <td th:text="${task.getTasksTitle()}"></td>
+         <td  th:text="${task.getTasksStatus()!=4?(task.getTasksStatus()!=3?
+               (task.getTasksStatus()!=0?('IN TEST'):'TO DO'):'DONE'):'FAILED'}"
+              th:class="${task.getTasksStatus()!=4?(task.getTasksStatus()!=3?
+                    (task.getTasksStatus()!=0?('text-warning'):'text-primary'):'text-success'):'text-danger'}"
+         ></td>
+         <td>
+            <a th:href="@{'/detailsTask/' + ${task.getId()}}" class="btn btn-primary btn-sm">DETAIL</a>
+         </td>
+      </tr>
+      </tbody>
+   </table>
+
+
+</div>
+
+</html>

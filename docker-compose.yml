@@ -1,0 +1,26 @@
+version: '1.0'
+
+services:
+  backend:
+    image: 'final-project-iso'
+    container_name: 'backend-container'
+    depends_on: 
+      - db
+    environment: 
+      - SERVER_PORT=8888
+      - SPRING_DATASOURCE_USERNAME=annur
+      - SPRING_DATASOURCE_PASSWORD=1234
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_JPA_SHOW_SQL=false
+    ports:
+      - 8080:8888	
+
+  db:
+    image: 'postgres'
+    container_name: 'postgres-container'
+    environment: 
+      - POSTGRES_USER=annur
+      - POSTGRES_PASSWORD=1234
+    ports:
+      - 2345:5432
